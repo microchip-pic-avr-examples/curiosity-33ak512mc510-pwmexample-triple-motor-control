@@ -4,7 +4,7 @@
     <img alt="Microchip Logo." src="images/microchip_logo_black_red.png">
 </picture> 
 
-## %repoDescritpion%
+## curiosity 33ak512mc510 pwmexample triple motor control
 
 Board Image if any.
 
