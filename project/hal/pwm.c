@@ -115,6 +115,94 @@ void InitPWMGenerators(void)
     
     APWMEVTA = 0x0000;
     
+    /* PWM Event Output Enable bit  
+       1 = Event output signal is output on PWMEy pin
+       0 = Event output signal is internal only */
+    PWMEVTAbits.EVTAOEN  = 0;
+    /* EVTyPOL: PWM Event Output Polarity bit
+       1 = Event output signal is active-low
+       0 = Event output signal is active-high */
+    PWMEVTAbits.EVTAPOL  = 0;
+    /* EVTySTRD: PWM Event Output Stretch Disable bit
+       1 = Event output signal pulse width is not stretched
+       0 = Event output signal is stretched to eight PWM clock cycles minimum */
+    PWMEVTAbits.EVTASTRD = 1; 
+    /* EVTySYNC: PWM Event Output Sync bit
+       1 = Event output signal is synchronized to the system clock
+       0 = Event output is not synchronized to the system clock
+       Event output signal pulse will be two system clocks when this bit is set and EVTySTRD = 1 */
+    PWMEVTAbits.EVTASYNC = 1;
+    //    0b11111 FEP Calibration Error event signal
+    //    0b11110 FEP Calibration Done event signal
+    //    0b11101 FEP Lock event signal
+    //    0b11100 FEP Lock Lost event signal
+    //    0b11011 FEP Lock Time Out event signal
+    //    0b11010 FEP Runt Pulse event signal
+    //    0b11001-01100 Reserved
+    //    0b01011 DAC Trigger signal
+    //    0b01010 ADC Trigger 2 signal
+    //    0b01001 ADC Trigger 1 signal
+    //    0b01000 STEER signal (available in push-pull output modes only)
+    //    0b00111 PHASE signal (available in center aligned modes only)
+    //    0b00110 PCI Fault2 active output signal
+    //    0b00101 PCI Fault active output signal
+    //    0b00100 PCI current limit active output signal
+    //    0b00011 PCI feed-forward active output signal
+    //    0b00010 PCI Sync active output signal
+    //    0b00001 PWM Generator output signal(1)
+    //    0b00000 Source is selected by the PGTRGSEL[2:0] bits
+    PWMEVTAbits.EVTASEL  = 0b00001;
+    /* EVTyPGS[2:0]: PWM Event Source Selection bits
+       111-100 = Reserved
+       011 = PWM Generator 4
+       ...
+       000 = PWM Generator 1 */
+    PWMEVTAbits.EVTAPGS  = 4;
+    
+    
+        /* PWM Event Output Enable bit  
+       1 = Event output signal is output on PWMEy pin
+       0 = Event output signal is internal only */
+    PWMEVTBbits.EVTBOEN  = 1;
+    /* EVTyPOL: PWM Event Output Polarity bit
+       1 = Event output signal is active-low
+       0 = Event output signal is active-high */
+    PWMEVTBbits.EVTBPOL  = 0;
+    /* EVTySTRD: PWM Event Output Stretch Disable bit
+       1 = Event output signal pulse width is not stretched
+       0 = Event output signal is stretched to eight PWM clock cycles minimum */
+    PWMEVTBbits.EVTBSTRD = 1; 
+    /* EVTySYNC: PWM Event Output Sync bit
+       1 = Event output signal is synchronized to the system clock
+       0 = Event output is not synchronized to the system clock
+       Event output signal pulse will be two system clocks when this bit is set and EVTySTRD = 1 */
+    PWMEVTBbits.EVTBSYNC = 1;
+    //    0b11111 FEP Calibration Error event signal
+    //    0b11110 FEP Calibration Done event signal
+    //    0b11101 FEP Lock event signal
+    //    0b11100 FEP Lock Lost event signal
+    //    0b11011 FEP Lock Time Out event signal
+    //    0b11010 FEP Runt Pulse event signal
+    //    0b11001-01100 Reserved
+    //    0b01011 DAC Trigger signal
+    //    0b01010 ADC Trigger 2 signal
+    //    0b01001 ADC Trigger 1 signal
+    //    0b01000 STEER signal (available in push-pull output modes only)
+    //    0b00111 PHASE signal (available in center aligned modes only)
+    //    0b00110 PCI Fault2 active output signal
+    //    0b00101 PCI Fault active output signal
+    //    0b00100 PCI current limit active output signal
+    //    0b00011 PCI feed-forward active output signal
+    //    0b00010 PCI Sync active output signal
+    //    0b00001 PWM Generator output signal(1)
+    //    0b00000 Source is selected by the PGTRGSEL[2:0] bits
+    PWMEVTBbits.EVTBSEL  = 0b00111;
+    /* EVTyPGS[2:0]: PWM Event Source Selection bits
+       111-100 = Reserved
+       011 = PWM Generator 4
+       ...
+       000 = PWM Generator 1 */
+    PWMEVTBbits.EVTBPGS  = 4;
     /* Function call to Initialize individual PWM modules*/
     InitPWMGenerator5 ();
     
@@ -199,7 +287,7 @@ void InitPWMGenerator5 (void)
        1 = PWM Generator broadcasts software set/clear of UPDATE status bit and 
            EOC signal to other PWM Generators
        0 = PWM Generator does not broadcast UPDATE status bit or EOC signal */
-    PG5CONbits.MSTEN = 0;
+    PG5CONbits.MSTEN = 1;
     /* PWM Buffer Update Mode Selection bits 
        Update Data registers at start of next PWM cycle if UPDATE = 1. */
     PG5CONbits.UPDMOD = 0;
@@ -1269,7 +1357,7 @@ void InitPWMGenerator6 (void)
     PG6LEB      = 0x0000;
     
     /* Initialize PWM GENERATOR 6 PHASE REGISTER */
-//    PG6PHASE     = MIN_DUTY;
+    PG6PHASE     = MIN_DUTY;
     /* Initialize PWM GENERATOR 6 DUTY CYCLE REGISTER */
     PG6DC        = (LOOPTIME_TCY)>>1;
     /* Initialize PWM GENERATOR 6 DUTY CYCLE ADJUSTMENT REGISTER */
@@ -1287,8 +1375,8 @@ void InitPWMGenerator6 (void)
     PG6TRIGB     = 0x0000;
     /* Initialize PWM GENERATOR 6 TRIGGER C REGISTER */
     PG6TRIGC     = 0x0000;
-    
-} 
+
+}    
 
 /**
 * <B> Function: InitPWMGenerator7()    </B>
@@ -1307,7 +1395,7 @@ void InitPWMGenerator7 (void)
 
     /* Initialize PWM GENERATOR 7 CONTROL REGISTER */
     PG7CON      = 0x0000;
-    /* PWM Generator 1 Enable bit : 1 = Is enabled, 0 = Is not enabled */
+    /* PWM Generator 7 Enable bit : 1 = Is enabled, 0 = Is not enabled */
     /* Ensuring PWM Generator is disabled prior to configuring module */
     PG7CONbits.ON = 0;
     /* Clock Selection bits
@@ -1333,7 +1421,7 @@ void InitPWMGenerator7 (void)
     /* Master Period Register Select bit
        1 = Macro uses the MPER register instead of PG7PER
        0 = Macro uses the PG7PER register */
-    PG7CONbits.MPERSEL = 0;
+    PG7CONbits.MPERSEL = 1;
     /* MPHSEL: Master Phase Register Select bit
        1 = Macro uses the MPHASE register instead of PG7PHASE
        0 = Macro uses the PG7PHASE register */
@@ -1348,7 +1436,7 @@ void InitPWMGenerator7 (void)
     PG7CONbits.UPDMOD = 0;
     /* PWM Generator Trigger Mode Selection bits
        0b00 = PWM Generator operates in Single Trigger mode */
-    PG7CONbits.TRGMOD = 0;
+    PG7CONbits.TRGMOD = 1;
     /* Start of Cycle Selection bits
        0000 = Local EOC*/
     PG7CONbits.SOCS = 5;
@@ -1407,19 +1495,19 @@ void InitPWMGenerator7 (void)
     /* PWM Generator Output Mode Selection bits
        00 = PWM Generator outputs operate in Complementary mode*/
     PG7IOCON1bits.PMOD = 0;
-    /* PWM1H Output Port Enable bit
-       1 = PWM Generator controls the PWM1H output pin
-       0 = PWM Generator does not control the PWM1H output pin */
+    /* PWM7H Output Port Enable bit
+       1 = PWM Generator controls the PWM7H output pin
+       0 = PWM Generator does not control the PWM7H output pin */
     PG7IOCON1bits.PENH = 1;
-    /* PWM1L Output Port Enable bit
-       1 = PWM Generator controls the PWM1L output pin
-       0 = PWM Generator does not control the PWM1L output pin */
+    /* PWM7L Output Port Enable bit
+       1 = PWM Generator controls the PWM7L output pin
+       0 = PWM Generator does not control the PWM7L output pin */
     PG7IOCON1bits.PENL = 1;
-    /* PWM1H Output Polarity bit
+    /* PWM7H Output Polarity bit
        1 = Output pin is active-low
        0 = Output pin is active-high*/
     PG7IOCON1bits.POLH = 0;
-    /* PWM1L Output Polarity bit
+    /* PWM7L Output Polarity bit
        1 = Output pin is active-low
        0 = Output pin is active-high*/
     PG7IOCON1bits.POLL = 0;
@@ -1514,7 +1602,7 @@ void InitPWMGenerator7 (void)
     /* Initialize PWM GENERATOR 7 TRIGGER C REGISTER */
     PG7TRIGC     = 0x0000;
     
-} 
+}
 
 /**
 * <B> Function: InitPWMGenerator8()    </B>
@@ -1559,7 +1647,7 @@ void InitPWMGenerator8 (void)
     /* Master Period Register Select bit
        1 = Macro uses the MPER register instead of PG8PER
        0 = Macro uses the PG8PER register */
-    PG8CONbits.MPERSEL = 0;
+    PG8CONbits.MPERSEL = 1;
     /* MPHSEL: Master Phase Register Select bit
        1 = Macro uses the MPHASE register instead of PG8PHASE
        0 = Macro uses the PG8PHASE register */
@@ -1574,7 +1662,7 @@ void InitPWMGenerator8 (void)
     PG8CONbits.UPDMOD = 0;
     /* PWM Generator Trigger Mode Selection bits
        0b00 = PWM Generator operates in Single Trigger mode */
-    PG8CONbits.TRGMOD = 0;
+    PG8CONbits.TRGMOD = 1;
     /* Start of Cycle Selection bits
        0000 = Local EOC*/
     PG8CONbits.SOCS = 5;
@@ -1727,7 +1815,7 @@ void InitPWMGenerator8 (void)
     /* Initialize PWM GENERATOR 8 DUTY CYCLE ADJUSTMENT REGISTER */
     PG8DCA       = 0x0000;
     /* Initialize PWM GENERATOR 8 PERIOD REGISTER */
-    PG8PER       = LOOPTIME_TCY;
+    PG8PER       = 0x0000;
     /* Initialize PWM GENERATOR 8 DEAD-TIME REGISTER */
     PG8DTbits.DTH = DEADTIME;
     /* Initialize PWM GENERATOR 8 DEAD-TIME REGISTER */
